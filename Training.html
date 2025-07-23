@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybersecurity Threats Infographic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #003f5c 0%, #2f4b7c 50%, #665191 100%);
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: bold;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .flowchart-step {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+        }
+        
+        .flowchart-step:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .pyramid-level {
+            clip-path: polygon(10% 0, 90% 0, 100% 100%, 0% 100%);
+            transition: all 0.4s ease;
+            z-index: 1;
+            cursor: pointer;
+        }
+        
+        .pyramid-level:hover {
+            transform: scale(1.1);
+            z-index: 10;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .red-flag-example {
+            border: 3px solid #f95d6a;
+            background: linear-gradient(135deg, #ffe0e6 0%, #fff5f7 100%);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Inter', sans-serif;
+            color: #374151;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .red-flag-example:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(249, 93, 106, 0.2);
+            border-color: #d45087;
+        }
+        
+        .red-flag-example strong {
+            color: #d45087;
+            font-weight: 700;
+        }
+        
+        .category-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 1rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .category-card:hover::before {
+            left: 100%;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-15px) scale(1.05);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+        
+        .category-card h3 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #2f4b7c;
+            font-size: 1.25rem;
+        }
+        
+        .category-card p {
+            color: #4a4a4a;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        .section-heading-bg {
+            background: linear-gradient(135deg, #2f4b7c 0%, #665191 100%);
+            color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section-heading-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+        
+        .section-heading-bg:hover::before {
+            left: 100%;
+        }
+        
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 0;
+        }
+        
+        .collapsible-content.expanded {
+            max-height: 2000px;
+            opacity: 1;
+            padding-top: 2rem;
+        }
+        
+        .interactive-stat {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .interactive-stat:hover {
+            transform: scale(1.1);
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .quiz-button {
+            background: linear-gradient(135deg, #f95d6a 0%, #d45087 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+        
+        .quiz-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(249, 93, 106, 0.3);
+        }
+        
+        .quiz-button.correct {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .quiz-button.incorrect {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #2f4b7c;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffa600 0%, #ff7c43 100%);
+            width: 0%;
+            transition: width 1s ease;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="progress-bar fixed top-0 left-0 z-50">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div class="container mx-auto p-4 md:p-8">
+
+        <header class="text-center mb-12 md:mb-20 text-white fade-in">
+            <div class="flex flex-col md:flex-row justify-center items-center mb-4">
+                <div>
+                    <h1 class="text-4xl md:text-6xl font-black text-white pulse-animation" style="color: #ffa600;">🛡️ Cybersecurity for Everyone</h1>
+                    <p class="text-lg md:text-xl text-gray-300 mt-4">Simple Steps to Stay Safe in a Digital World</p>
+                    <p class="text-md md:text-lg text-gray-400 mt-4">Presented by: Eugene Okonu</p>
+                    <p class="text-md md:text-lg text-gray-400">McDave ICT Department</p>
+                </div>
+            </div>
+        </header>
+
+        <section id="intro" class="mb-16 md:mb-24 fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="bg-white rounded-xl shadow-2xl p-8 text-center category-card">
+                    <p class="text-7xl md:text-8xl font-black interactive-stat" style="color: #f95d6a;">91%</p>
+                    <p class="text-xl md:text-2xl font-bold mt-2">of all cyberattacks begin with a phishing email.</p>
+                    <p class="text-gray-600 mt-4">This makes your inbox the single most important area to protect. Understanding the threats that arrive by email is the first step to a safer digital life.</p>
+                    
+                    <div class="mt-6">
+                        <button class="quiz-button" onclick="showQuiz1()">🧠 Test Your Knowledge!</button>
+                    </div>
+                    
+                    <div id="quiz1" class="mt-4 hidden">
+                        <p class="font-bold mb-3">Quick Quiz: What should you do when you receive an unexpected email with an attachment?</p>
+                        <button class="quiz-button" onclick="checkAnswer1(this, false)">Open it immediately</button>
+                        <button class="quiz-button" onclick="checkAnswer1(this, true)">Verify the sender first</button>
+                        <button class="quiz-button" onclick="checkAnswer1(this, false)">Forward it to friends</button>
+                        <div id="quiz1Result" class="mt-3 hidden"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-2xl p-8 category-card">
+                    <h2 class="text-2xl md:text-3xl font-bold text-center mb-6">💡 What is Cybersecurity?</h2>
+                    <p class="text-gray-700 mb-6 text-center">Cybersecurity is like having a digital bodyguard - it protects your computers, phones, and personal information from online criminals who want to steal, damage, or misuse your data.</p>
+                    
+                    <h2 class="text-2xl md:text-3xl font-bold text-center mb-6">🏢 Why Does Your Organization Need It?</h2>
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div class="tooltip">
+                            <div class="bg-blue-100 p-4 rounded-lg">
+                                <p class="text-2xl">💰</p>
+                                <p class="font-bold">Protects Money</p>
+                            </div>
+                            <span class="tooltiptext">Prevents financial losses from cyber attacks</span>
+                        </div>
+                        <div class="tooltip">
+                            <div class="bg-green-100 p-4 rounded-lg">
+                                <p class="text-2xl">🤝</p>
+                                <p class="font-bold">Keeps Trust</p>
+                            </div>
+                            <span class="tooltiptext">Maintains customer confidence and reputation</span>
+                        </div>
+                        <div class="tooltip">
+                            <div class="bg-yellow-100 p-4 rounded-lg">
+                                <p class="text-2xl">📋</p>
+                                <p class="font-bold">Follows Rules</p>
+                            </div>
+                            <span class="tooltiptext">Ensures compliance with legal requirements</span>
+                        </div>
+                        <div class="tooltip">
+                            <div class="bg-purple-100 p-4 rounded-lg">
+                                <p class="text-2xl">⚡</p>
+                                <p class="font-bold">Stays Running</p>
+                            </div>
+                            <span class="tooltiptext">Maintains business operations without interruption</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="threat-landscape" class="mb-16 md:mb-24 fade-in">
+            <div class="bg-white rounded-xl shadow-2xl p-8 md:p-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-6" style="color: #2f4b7c;">🌐 The Digital Danger Zone</h2>
+                <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">Think of the internet as a busy city. Just like any city, there are both good neighborhoods and dangerous areas. Cybercriminals often target small businesses because they think you have fewer security guards watching the doors.</p>
+                
+                <div class="text-center mb-8">
+                    <p class="text-5xl md:text-6xl font-black interactive-stat" style="color: #ffa600;">📈 Sharp Increase</p>
+                    <p class="text-xl md:text-2xl font-bold mt-2 text-gray-700">in Cyber Threat Attacks Detected in Kenya</p>
+                    <p class="text-gray-500 text-sm mt-1">Source: CA Annual Report 2019/2020, with responses to Covid-19</p>
+                </div>
+
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-6" style="color: #2f4b7c;">🎯 Why Do Attacks Work So Well?</h2>
+                <p class="text-center text-gray-600 mb-8">It's not about the technology being weak - it's often about human mistakes and outdated practices.</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                    <div class="category-card" onclick="showDetail('human')">
+                        <p class="text-5xl mb-4">🧑‍🤝‍🧑</p>
+                        <h3>The Human Factor</h3>
+                        <p>Even smart people can be tricked by clever social engineering tactics.</p>
+                        <div id="human-detail" class="hidden mt-4 p-4 bg-blue-50 rounded-lg">
+                            <p class="text-sm"><span class="font-bold">Example:</span> A call saying "Hi, this is IT support. We need your password to fix a security issue." Real IT never asks for passwords!</p>
+                        </div>
+                    </div>
+                    
+                    <div class="category-card" onclick="showDetail('outdated')">
+                        <p class="text-5xl mb-4">⏳</p>
+                        <h3>Outdated Digital Locks</h3>
+                        <p>Old software is like having rusty locks - easy for criminals to break.</p>
+                        <div id="outdated-detail" class="hidden mt-4 p-4 bg-yellow-50 rounded-lg">
+                            <p class="text-sm"><span class="font-bold">Tip:</span> Always update your apps and operating system. Those annoying update notifications are actually security patches!</p>
+                        </div>
+                    </div>
+                    
+                    <div class="category-card" onclick="showDetail('passwords')">
+                        <p class="text-5xl mb-4">🔑</p>
+                        <h3>Weak Digital Keys</h3>
+                        <p>Using "password123" is like hiding your house key under the doormat.</p>
+                        <div id="passwords-detail" class="hidden mt-4 p-4 bg-red-50 rounded-lg">
+                            <p class="text-sm"><span class="font-bold">Bad:</span> password123<br><span class="font-bold">Good:</span> MyD0g8arka@L0t! (easy to remember, hard to guess)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="category-card" onclick="showDetail('awareness')">
+                        <p class="text-5xl mb-4">🧠</p>
+                        <h3>Not Knowing the Tricks</h3>
+                        <p>If you don't know what to look for, how can you spot the danger?</p>
+                        <div id="awareness-detail" class="hidden mt-4 p-4 bg-green-50 rounded-lg">
+                            <p class="text-sm"><span class="font-bold">Solution:</span> This presentation! Knowledge is your best defense against cyber criminals.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="category-card" onclick="showDetail('complexity')">
+                        <p class="text-5xl mb-4">🕸️</p>
+                        <h3>Too Many Digital Doors</h3>
+                        <p>More apps and devices mean more ways for criminals to sneak in.</p>
+                        <div id="complexity-detail" class="hidden mt-4 p-4 bg-purple-50 rounded-lg">
+                            <p class="text-sm"><span class="font-bold">Tip:</span> Regularly review what apps have access to your data. Remove unused apps and permissions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="types-of-threats" class="mb-16 md:mb-24 fade-in">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-white">🦹 Meet the Digital Villains</h2>
+            <p class="text-center text-gray-300 mb-8 max-w-3xl mx-auto">Just like in movies, cybercriminals have different motivations and methods. Here are the three main types:</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="category-card" onclick="animateCard(this)">
+                    <p class="text-5xl mb-4">🕵️</p>
+                    <h3 style="color: #665191;">The Money Grabbers</h3>
+                    <p><span class="font-bold">What they want:</span> Your money, credit card info, or valuable data they can sell.</p>
+                    <p class="mt-3 text-sm text-gray-600"><span class="font-bold">Think:</span> Digital pickpockets and online bank robbers</p>
+                </div>
+                
+                <div class="category-card" onclick="animateCard(this)">
+                    <p class="text-5xl mb-4">⚔️</p>
+                    <h3 style="color: #a05195;">The Spies</h3>
+                    <p><span class="font-bold">What they want:</span> Secrets, business plans, or to spy on competitors or governments.</p>
+                    <p class="mt-3 text-sm text-gray-600"><span class="font-bold">Think:</span> Digital James Bond villains</p>
+                </div>
+                
+                <div class="category-card" onclick="animateCard(this)">
+                    <p class="text-5xl mb-4">💣</p>
+                    <h3 style="color: #d45087;">The Chaos Creators</h3>
+                    <p><span class="font-bold">What they want:</span> To cause fear, shut down important systems, or make a political statement.</p>
+                    <p class="mt-3 text-sm text-gray-600"><span class="font-bold">Think:</span> Digital vandals and extremists</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="common-methods" class="mb-16 md:mb-24 fade-in">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-white">🛠️ The Criminal's Favorite Tools</h2>
+            <p class="text-center text-gray-300 mb-8 max-w-3xl mx-auto">Here are the most common weapons in a cybercriminal's toolkit. Knowing these helps you recognize an attack:</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white rounded-xl shadow-xl p-6 text-center category-card" onclick="showMethodDetail('malware')">
+                    <p class="text-5xl mb-4">🦠</p>
+                    <h3 style="color: #ff7c43;">Digital Viruses (Malware)</h3>
+                    <p class="text-gray-600">Harmful software that sneaks onto your computer to steal, damage, or spy.</p>
+                    <div id="malware-detail" class="hidden mt-4 p-4 bg-orange-50 rounded-lg text-left">
+                        <p class="text-sm"><span class="font-bold">Real-world example:</span> You download what looks like a free game, but it secretly steals your passwords while you play.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-xl p-6 text-center category-card" onclick="showMethodDetail('phishing')">
+                    <p class="text-5xl mb-4">🎣</p>
+                    <h3 style="color: #d45087;">Digital Fishing (Phishing)</h3>
+                    <p class="text-gray-600">Fake emails or websites that trick you into sharing your personal information.</p>
+                    <div id="phishing-detail" class="hidden mt-4 p-4 bg-pink-50 rounded-lg text-left">
+                        <p class="text-sm"><span class="font-bold">Real-world example:</span> An email that looks like it's from your bank asking you to "verify" your account by clicking a link.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-xl p-6 text-center category-card" onclick="showMethodDetail('mitm')">
+                    <p class="text-5xl mb-4">👥</p>
+                    <h3 style="color: #a05195;">Digital Eavesdropping</h3>
+                    <p class="text-gray-600">Criminals secretly listen to your online conversations or intercept your data.</p>
+                    <div id="mitm-detail" class="hidden mt-4 p-4 bg-purple-50 rounded-lg text-left">
+                        <p class="text-sm"><span class="font-bold">Real-world example:</span> Using fake WiFi at a coffee shop to see everything you do online.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-xl p-6 text-center category-card" onclick="showMethodDetail('dos')">
+                    <p class="text-5xl mb-4">🚫</p>
+                    <h3 style="color: #f95d6a;">Digital Traffic Jam</h3>
+                    <p class="text-gray-600">Overwhelming websites or systems with fake traffic to shut them down.</p>
+                    <div id="dos-detail" class="hidden mt-4 p-4 bg-red-50 rounded-lg text-left">
+                        <p class="text-sm"><span class="font-bold">Real-world example:</span> Like having thousands of people call a restaurant at once so real customers can't get through.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-xl p-6 text-center category-card" onclick="showMethodDetail('sql')">
+                    <p class="text-5xl mb-4">💉</p>
+                    <h3 style="color: #ff7c43;">Code Injection</h3>
+                    <p class="text-gray-600">Sneaking harmful code into websites to access databases and steal information.</p>
+                    <div id="sql-detail" class="hidden mt-4 p-4 bg-orange-50 rounded-lg text-left">
+                        <p class="text-sm"><span class="font-bold">Real-world example:</span> Like writing a fake prescription to get access to a pharmacy's medicine cabinet.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="anatomy" class="mb-16 md:mb-24 bg-white rounded-xl shadow-2xl p-8 md:p-12 fade-in">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-2">🔍 How Email Scams Actually Work</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">Email scams are like magic tricks - once you know how they work, they're much easier to spot. Here's the step-by-step process:</p>
+            
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-0">
+                <div class="flowchart-step text-center p-6 bg-gradient-to-br from-red-50 to-red-100 rounded-xl w-full md:w-1/4" onclick="highlightStep(this, 1)">
+                    <p class="text-5xl mb-2">🎣</p>
+                    <h3 class="font-bold text-lg">Step 1: The Bait</h3>
+                    <p class="text-sm text-gray-600">A fake email designed to grab your attention and make you panic or get excited.</p>
+                    <div class="mt-3 text-xs bg-white p-2 rounded">
+                        <span class="font-bold">Example:</span> "URGENT: Your account will be closed in 24 hours!"
+                    </div>
+                </div>
+                
+                <div class="text-4xl text-gray-300 mx-4 transform md:rotate-0 rotate-90">→</div>
+                
+                <div class="flowchart-step text-center p-6 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl w-full md:w-1/4" onclick="highlightStep(this, 2)">
+                    <p class="text-5xl mb-2">🖱️</p>
+                    <h3 class="font-bold text-lg">Step 2: The Click</h3>
+                    <p class="text-sm text-gray-600">You click a link or open an attachment because you're worried or curious.</p>
+                    <div class="mt-3 text-xs bg-white p-2 rounded">
+                        <span class="font-bold">Tip:</span> Always pause and think before clicking!
+                    </div>
+                </div>
+                
+                <div class="text-4xl text-gray-300 mx-4 transform md:rotate-0 rotate-90">→</div>
+                
+                <div class="flowchart-step text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl w-full md:w-1/4" onclick="highlightStep(this, 3)">
+                    <p class="text-5xl mb-2">🎭</p>
+                    <h3 class="font-bold text-lg">Step 3: The Fake</h3>
+                    <p class="text-sm text-gray-600">You're taken to a website that looks real but is actually a clever copy designed to steal your info.</p>
+                    <div class="mt-3 text-xs bg-white p-2 rounded">
+                        <span class="font-bold">Check:</span> Look at the web address carefully!
+                    </div>
+                </div>
+                
+                <div class="text-4xl text-gray-300 mx-4 transform md:rotate-0 rotate-90">→</div>
+                
+                <div class="flowchart-step text-center p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl w-full md:w-1/4" onclick="highlightStep(this, 4)">
+                    <p class="text-5xl mb-2">💰</p>
+                    <h3 class="font-bold text-lg">Step 4: The Theft</h3>
+                    <p class="text-sm text-gray-600">The criminal now has your login details and can access your real accounts.</p>
+                    <div class="mt-3 text-xs bg-white p-2 rounded">
+                        <span class="font-bold">Result:</span> Your accounts are compromised!
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center">
+                <button class="quiz-button" onclick="startPhishingQuiz()">🧠 Test Your Phishing Detection Skills!</button>
+                <div id="phishingQuiz" class="hidden mt-6 p-6 bg-gray-50 rounded-xl">
+                    <p class="font-bold mb-4">Can you spot the phishing attempt?</p>
+                    <div class="bg-white p-4 rounded-lg border-2 border-gray-300 mb-4 text-left">
+                        <p><span class="font-bold">From:</span> security@amaz0n-update.com</p>
+                        <p><span class="font-bold">Subject:</span> URGENT: Suspicious Activity Detected</p>
+                        <p class="mt-2">Dear Valued Customer,</p>
+                        <p>We detected unusual login activity on your account. To protect your account, please verify your details immediately by clicking the link below:</p>
+                        <p class="text-blue-600 underline mt-3"><u><a href="#" onclick="return false;">Click here to verify your account</a></u></p>
+                        <p class="mt-3 text-sm text-gray-500">If you do not verify within 24 hours, your account will be locked.</p>
+                    </div>
+                    <button class="quiz-button" onclick="checkPhishingQuiz(this, true)">This is a phishing email</button>
+                    <button class="quiz-button" onclick="checkPhishingQuiz(this, false)">This is a legitimate email</button>
+                    <div id="phishingQuizResult" class="mt-3 hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="phishing-types" class="mb-16 md:mb-24 fade-in">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-white">Know Your Enemy: Types of Phishing</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="relative w-full max-w-md mx-auto h-80">
+                    <div class="pyramid-level absolute bottom-0 h-full w-full flex items-center justify-center text-center p-4" style="background-color: #665191;">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Phishing</h3>
+                            <p class="text-white text-sm mt-2">Broad attacks sent to a massive number of people, hoping a few will bite. Often impersonates large companies like banks or tech giants.</p>
+                        </div>
+                    </div>
+                    <div class="pyramid-level absolute bottom-0 h-2/3 w-full flex items-center justify-center text-center p-4" style="background-color: #a05195;">
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Spear Phishing</h3>
+                            <p class="text-white text-sm mt-1">Targeted attacks aimed at specific individuals or companies. The emails are personalized with names, job titles, or other details to appear more legitimate.</p>
+                        </div>
+                    </div>
+                    <div class="pyramid-level absolute bottom-0 h-1/3 w-full flex items-center justify-center text-center p-4" style="background-color: #d45087;">
+                        <div>
+                            <h3 class="text-lg font-bold text-white">Whaling / BEC</h3>
+                            <p class="text-white text-sm mt-1">Highly targeted attacks aimed at senior executives ("whales") or involving impersonation of a CEO to trick employees into making wire transfers.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-white">
+                    <h3 class="text-2xl font-bold mb-4">A Hierarchy of Deception</h3>
+                    <p class="mb-4 text-gray-300">Not all phishing attacks are created equal. They range from wide-net, generic scams to highly sophisticated and personalized attacks aimed at high-value targets. The more targeted the attack, the harder it can be to spot.</p>
+                    <p class="text-gray-300">Understanding this hierarchy helps you appreciate the different levels of threat you might face, from a random fake password reset email to a carefully crafted message that seems to come directly from your boss.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="red-flags" class="mb-16 md:mb-24 bg-white rounded-xl shadow-2xl p-8 md:p-12 fade-in">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-2">🚨 Your 5-Second Security Check</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">Before you click any link or open any attachment, take five seconds to look for these common red flags. This chart shows the most common signs of a phishing attempt.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Examples of Red Flags in Action:</h3>
+                    <div class="bg-gray-100 rounded-lg p-4 mb-6">
+                        <img src="Phishing password.png" alt="Example Phishing Email" class="w-full h-auto rounded-lg shadow-md mb-4">
+                        <p class="text-gray-700 text-sm mb-2">This image shows a real phishing attempt. Let's break down the red flags:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="red-flag-example">
+                                <p class="font-bold text-lg mb-1">1. Suspicious Sender Address</p>
+                                <p class="text-sm">Look at the sender: <span class="font-bold">`info@webluz.com.br`</span>. Does this look like a legitimate sender for a password reset? Probably not for most users.</p>
+                            </div>
+                            <div class="red-flag-example">
+                                <p class="font-bold text-lg mb-1">2. Urgency or Threats</p>
+                                <p class="text-sm">The subject line "Notice!!!" and phrases like "Your email password will expire in 24 hours" and "if not processed promptly, your account may be temporarily locked" are designed to make you panic and act without thinking.</p>
+                            </div >
+                            <div class="red-flag-example">
+                                <p class="font-bold text-lg mb-1">3. Generic Greetings</p>
+                                <p class="text-sm">The email starts with "Notice!!!" and is addressed "To: You". Legitimate services usually address you by your name.</p>
+                            </div>
+                            <div class="red-flag-example">
+                                <p class="font-bold text-lg mb-1">4. Spelling & Grammar Mistakes</p>
+                                <p class="text-sm">Notice the phrase: "please update your password as soon as expire." The grammar is incorrect; it should be "as soon as it expires."</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="red-flag-example bg-gray-100">
+                        <p class="font-bold text-lg mb-1">5. Unexpected Attachments 📎</p>
+                        <p class="text-sm">Imagine an email from an unknown sender with a subject like "Your Invoice" and an attachment named <span class="font-bold">`Invoice_00123.zip`</span> or <span class="font-bold">`Report.pdf.exe`</span>. If you weren't expecting a file, especially a compressed (.zip) or executable (.exe) file, it's a huge red flag.</p>
+                    </div>
+
+                    <div class="red-flag-example bg-gray-100">
+                        <p class="font-bold text-lg mb-1">6. Mismatched Links (Hover Test) 🖱️</p>
+                        <p class="text-sm">The button says "Update password now". If you hover your mouse over it (don't click!) and the link preview shows something like <span class="font-bold">`http://malicious-site.xyz/login`</span> instead of `https://your-email-provider.com/password-reset`, it's a fake link!</p>
+                    </div>
+                </div>
+                <div class="chart-container h-96 md:h-[500px] max-w-4xl">
+                    <canvas id="redFlagsChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="attachments" class="mb-16 md:mb-24 fade-in">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-white">🗃️ The Hidden Danger of Attachments</h2>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                 <div class="text-white">
+                    <h3 class="text-2xl font-bold mb-4">More Than Just a File</h3>
+                    <p class="mb-4 text-gray-300">Email attachments are a primary way hackers deliver malware. They often disguise malicious files as legitimate documents, like invoices, receipts, or reports. Seemingly harmless files like PDFs and Word documents can contain hidden scripts that execute when opened, infecting your system.</p>
+                    <p class="text-gray-300 font-bold">The rule is simple: If you don't know the sender and weren't expecting the file, do not open it.</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-2xl p-8">
+                    <p class="text-center text-gray-600 mb-4 font-semibold">Common Malicious File Types in Emails</p>
+                    <div class="chart-container h-80 max-w-lg">
+                        <canvas id="attachmentsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="best-practices" class="mb-16 md:mb-24 fade-in">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-white">✅ Best Practices To Avoid Cyber Attacks in Our Organization</h2>
+            <div class="grid grid-cols-1 gap-8">
+                <!-- Secure the Front Door -->
+                <div class="collapsible-section bg-white rounded-xl shadow-2xl p-8 md:p-12">
+                    <div class="collapsible-header cursor-pointer flex justify-between items-center section-heading-bg text-center mb-4 p-4 rounded-xl transition-transform hover:scale-105 duration-300">
+                        <h3 class="text-2xl md:text-3xl font-bold">Secure the Front Door 🚪</h3>
+                        <span class="toggle-icon text-3xl font-bold">+</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <ul class="list-disc-custom text-gray-700 text-lg space-y-3">
+                            <li><span class="font-bold">Risk-based Conditional Access and Multi-Factor Authentication (MFA):</span> Implement systems that require additional verification steps (like a code from your phone) for logins, especially from unusual locations or devices.</li>
+                            <li><span class="font-bold">Security Reporting:</span> Regularly review security reports and logs to identify unusual activity or potential breaches.</li>
+                            <li><span class="font-bold">Regularly Backing Up All Data:</span> Ensure critical data is consistently backed up to a secure, off-site location to allow for recovery in case of an attack.</li>
+                            <li><span class="font-bold">Identify Threats On-Premises:</span> Deploy tools and processes to detect and respond to threats within your internal network.</li>
+                            <li><span class="font-bold">Identify High-Risk Usage:</span> Monitor app usage, user behavior, and detect abnormal downloads (e.g., large data transfers outside normal hours) that might indicate malicious activity.</li>
+                            <li><span class="font-bold">Educate All Users:</span> Provide continuous cybersecurity training to all employees, making them the first line of defense.</li>
+                            <li><span class="font-bold">No Sharing Credentials:</span> Emphasize that login details should never be shared, even with colleagues or IT support.</li>
+                            <li><span class="font-bold">Require Users to Change Passwords After a Preset Period:</span> Implement a policy for regular password changes to reduce the risk of compromised credentials.</li>
+                            <li><span class="font-bold">Use One Password for One Account:</span> Encourage the use of unique, strong passwords for every online service to prevent credential stuffing attacks.</li>
+                            <li><span class="font-bold">Monitoring Third-Party Access (e.g., Remote Workers):</span> Securely manage and monitor access granted to external vendors or remote employees to prevent unauthorized entry.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Secure the Content -->
+                <div class="collapsible-section bg-white rounded-xl shadow-2xl p-8 md:p-12">
+                    <div class="collapsible-header cursor-pointer flex justify-between items-center section-heading-bg text-center mb-4 p-4 rounded-xl transition-transform hover:scale-105 duration-300">
+                        <h3 class="text-2xl md:text-3xl font-bold">Secure the Content 🔒</h3>
+                        <span class="toggle-icon text-3xl font-bold">+</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <ul class="list-disc-custom text-gray-700 text-lg space-y-3">
+                            <li><span class="font-bold">Intelligent Classification and Tagging of Content:</span> Categorize data based on its sensitivity (e.g., public, confidential, highly restricted) to apply appropriate security policies.</li>
+                            <li><span class="font-bold">Document Encryption, Tracking, Revocation:</span> Encrypt sensitive documents, track who accesses them, and have the ability to revoke access remotely if needed.</li>
+                            <li><span class="font-bold">Monitoring Shared Files and Responding to Potential Leaks:</span> Keep an eye on how files are shared, especially externally, and have procedures to respond quickly to potential data leaks.</li>
+                            <li><span class="font-bold">Data Segregation at a Device/App Level:</span> Ensure sensitive data is stored and processed separately from less critical information, both on devices and within applications.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Secure the Device -->
+                <div class="collapsible-section bg-white rounded-xl shadow-2xl p-8 md:p-12">
+                    <div class="collapsible-header cursor-pointer flex justify-between items-center section-heading-bg text-center mb-4 p-4 rounded-xl transition-transform hover:scale-105 duration-300">
+                        <h3 class="text-2xl md:text-3xl font-bold">Secure the Device 📱</h3>
+                        <span class="toggle-icon text-3xl font-bold">+</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <ul class="list-disc-custom text-gray-700 text-lg space-y-3">
+                            <li><span class="font-bold">Conditional Access:</span> Implement policies that grant access to resources only if certain conditions are met (e.g., device is compliant, user location is trusted).</li>
+                            <li><span class="font-bold">Device and App Access Level Controls:</span> Manage what users can do on their devices and within specific applications (e.g., restrict access to certain features or data).</li>
+                            <li><span class="font-bold">Save-As, Copy, Paste Restrictions:</span> Prevent sensitive data from being copied, pasted, or saved to unauthorized locations on devices.</li>
+                            <li><span class="font-bold">Device and App Level Data Wipe:</span> Have the capability to remotely wipe company data from lost or stolen devices, or from specific applications.</li>
+                            <li><span class="font-bold">Install Anti-Malware Software:</span> Ensure all devices have up-to-date antivirus and anti-malware software for real-time protection.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center text-white py-10 fade-in">
+            <div class="text-6xl mb-4">🛡️</div>
+            <h2 class="text-3xl md:text-4xl font-bold">You Are the Human Firewall</h2>
+            <p class="text-gray-300 mt-2 max-w-2xl mx-auto">Technology can only do so much. Your vigilance and awareness are the most powerful tools in protecting our digital world.</p>
+            <p class="text-md md:text-lg text-gray-400 mt-4">McDave ICT Department</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Functionality for collapsible sections
+            const headers = document.querySelectorAll('.collapsible-header');
+            headers.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('.toggle-icon');
+                    
+                    if (content.classList.contains('expanded')) {
+                        content.style.maxHeight = null;
+                        content.classList.remove('expanded');
+                        icon.textContent = '+';
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        content.classList.add('expanded');
+                        icon.textContent = '–';
+                    }
+                });
+            });
+
+            // Chart.js functionality
+            const tooltipTitleCallback = (tooltipItems) => {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) {
+                    return label.join(' ');
+                }
+                return label;
+            };
+
+            const wrapLabel = (label) => {
+                const maxLength = 16;
+                if (label.length <= maxLength) {
+                    return label;
+                }
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = '';
+                for (const word of words) {
+                    if ((currentLine + word).length <= maxLength) {
+                        currentLine += `${word} `;
+                    } else {
+                        lines.push(currentLine.trim());
+                        currentLine = `${word} `;
+                    }
+                }
+                lines.push(currentLine.trim());
+                return lines;
+            };
+
+            const redFlagsCtx = document.getElementById('redFlagsChart').getContext('2d');
+            const redFlagsLabels = [
+                'Suspicious Sender Address', 
+                'Urgency or Threats', 
+                'Generic Greetings', 
+                'Spelling & Grammar Mistakes', 
+                'Unexpected Attachments', 
+                'Mismatched Links (Hover Test)'
+            ];
+            new Chart(redFlagsCtx, {
+                type: 'bar',
+                data: {
+                    labels: redFlagsLabels.map(wrapLabel),
+                    datasets: [{
+                        label: 'Commonality Score',
+                        data: [90, 85, 75, 70, 65, 95],
+                        backgroundColor: ['#665191', '#a05195', '#d45087', '#f95d6a', '#ff7c43', '#ffa600'],
+                        borderColor: 'rgba(255, 255, 255, 0.2)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: tooltipTitleCallback
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#374151'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#374151',
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const attachmentsCtx = document.getElementById('attachmentsChart').getContext('2d');
+            new Chart(attachmentsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Office Docs (.doc, .xls)', 'PDFs', 'Archives (.zip, .rar)', 'Scripts (.js, .vbs)', 'Executables (.exe)'],
+                    datasets: [{
+                        label: 'Malicious File Types',
+                        data: [37, 26, 15, 12, 10],
+                        backgroundColor: ['#2f4b7c', '#665191', '#a05195', '#d45087', '#f95d6a'],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#374151'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: tooltipTitleCallback
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Quiz 1 functions
+            window.showQuiz1 = function() {
+                document.getElementById('quiz1').classList.remove('hidden');
+            }
+
+            window.checkAnswer1 = function(button, isCorrect) {
+                const resultDiv = document.getElementById('quiz1Result');
+                resultDiv.classList.remove('hidden');
+                if (isCorrect) {
+                    resultDiv.innerHTML = '<p class="text-green-600 font-bold">Correct! Always verify the sender and be cautious with unexpected attachments.</p>';
+                    button.classList.add('correct');
+                } else {
+                    resultDiv.innerHTML = '<p class="text-red-600 font-bold">Incorrect. Opening unexpected attachments is risky. Always verify first!</p>';
+                    button.classList.add('incorrect');
+                }
+                // Disable all buttons after an answer is selected
+                const buttons = document.querySelectorAll('#quiz1 .quiz-button');
+                buttons.forEach(btn => btn.disabled = true);
+            }
+
+            // Show detail for "Why Attacks So Successful" cards
+            window.showDetail = function(id) {
+                const detailElement = document.getElementById(`${id}-detail`);
+                detailElement.classList.toggle('hidden');
+            }
+
+            // Animate card for "Types of Cyber Threats"
+            window.animateCard = function(card) {
+                card.classList.add('pulse-animation');
+                setTimeout(() => {
+                    card.classList.remove('pulse-animation');
+                }, 1000); // Match animation duration
+            }
+
+            // Show method detail for "Common Methods Used to Threaten Cyber Security" cards
+            window.showMethodDetail = function(id) {
+                const detailElement = document.getElementById(`${id}-detail`);
+                detailElement.classList.toggle('hidden');
+            }
+
+            // Highlight step for "Anatomy of a Phishing Attack" flowchart
+            window.highlightStep = function(stepElement, stepNumber) {
+                // Optional: You can add more complex highlighting logic here
+                // For now, it just triggers the hover effect via CSS
+                console.log(`Highlighted Step ${stepNumber}`);
+            }
+
+            // Phishing Quiz functions
+            window.startPhishingQuiz = function() {
+                document.getElementById('phishingQuiz').classList.remove('hidden');
+                document.getElementById('phishingQuizResult').classList.add('hidden');
+                const buttons = document.querySelectorAll('#phishingQuiz .quiz-button');
+                buttons.forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove('correct', 'incorrect');
+                });
+            }
+
+            window.checkPhishingQuiz = function(button, isCorrect) {
+                const resultDiv = document.getElementById('phishingQuizResult');
+                resultDiv.classList.remove('hidden');
+                if (isCorrect) {
+                    resultDiv.innerHTML = '<p class="text-green-600 font-bold">Absolutely Correct! The suspicious sender domain, generic greeting, urgency, and mismatched link are all classic phishing signs.</p>';
+                    button.classList.add('correct');
+                } else {
+                    resultDiv.innerHTML = '<p class="text-red-600 font-bold">Not quite. This email has several red flags that indicate it\'s a phishing attempt. Look closely at the sender\'s email, the generic greeting, and the urgent tone.</p>';
+                    button.classList.add('incorrect');
+                }
+                const buttons = document.querySelectorAll('#phishingQuiz .quiz-button');
+                buttons.forEach(btn => btn.disabled = true);
+            }
+
+            // Scroll progress bar
+            const progressBar = document.getElementById('progressFill');
+            window.addEventListener('scroll', () => {
+                const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPosition = window.scrollY;
+                const progress = (scrollPosition / totalHeight) * 100;
+                progressBar.style.width = `${progress}%`;
+            });
+        });
+    </script>
+
+</body>
+</html>
